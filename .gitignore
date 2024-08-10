@@ -1,0 +1,7 @@
+
+*~
+
+__pycache__/
+.idea/
+css-decompressor/output1.css
+css-decompressor/output2.css
