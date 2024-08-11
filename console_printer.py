@@ -67,6 +67,8 @@ if 'PRINT' in os.environ:
 else:
     _DEBUG = DebugCodes.Warning._value
 
+__LAST_OUTPUT_FUNC_DATA = ""  # Used to know if direct_output must be ignored
+
 
 def print_error(message: str, direct_output=False) -> None:
     __print_message(message=message,
@@ -97,16 +99,24 @@ def print_debug(message: str = "", direct_output=False):
 
 
 def __print_message(message: str, code_type: int, isp1: inspect.FrameInfo, direct_output: bool) -> None:
-    if _DEBUG < code_type:
-        return
+    global __LAST_OUTPUT_FUNC_DATA
 
-    if direct_output:
-        print(message, flush=True)
+    if _DEBUG < code_type:
         return
 
     module_name = str(inspect.getmodule(isp1[0])).split("from '", 1)[1].split("'>", 1)[0]
     method_name = isp1[3]
-    datetime_str = str(datetime.now()).split(".")[0]
+    function_data = '"{}" {}'.format(module_name, method_name)
+
+    if function_data == __LAST_OUTPUT_FUNC_DATA:
+        if direct_output:
+            print(message, flush=True)
+            return
+
+        back_to = False
+    else:
+        back_to = True
+        __LAST_OUTPUT_FUNC_DATA = function_data
 
     match code_type:
 
@@ -134,12 +144,8 @@ def __print_message(message: str, code_type: int, isp1: inspect.FrameInfo, direc
     if message != "":
         message = "\n" + message
 
-    print('\n{color}{dt} [{code_str}]: "{module_name}" {method_name}\033[0;0m{msg}'.format(color=code_col,
-                                                                                           dt=datetime_str,
-                                                                                           code_str=code_str,
-                                                                                           module_name=module_name,
-                                                                                           method_name=method_name,
-                                                                                           msg=message), flush=True)
+    dt = str(datetime.now()).split(".")[0]
+    print(f'\n{code_col}{dt} [{code_str}]: {function_data}\033[0;0m{message}', flush=True)
 
 
 if __name__ == '__main__':
@@ -149,7 +155,9 @@ if __name__ == '__main__':
     print_info("this is INFO")
     print_debug('this is DEBUG')
 
+
     def test():
         print_debug()
+
 
     test()
