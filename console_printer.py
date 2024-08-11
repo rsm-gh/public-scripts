@@ -71,28 +71,32 @@ else:
 def print_error(message: str, direct_output=False) -> None:
     __print_message(message=message,
                     code_type=DebugCodes.Error._value,
+                    isp1=inspect.stack()[1],
                     direct_output=direct_output)
 
 
 def print_warning(message: str, direct_output=False):
     __print_message(message=message,
                     code_type=DebugCodes.Warning._value,
+                    isp1=inspect.stack()[1],
                     direct_output=direct_output)
 
 
 def print_info(message: str, direct_output=False):
     __print_message(message=message,
                     code_type=DebugCodes.Info._value,
+                    isp1=inspect.stack()[1],
                     direct_output=direct_output)
 
 
 def print_debug(message: str = "", direct_output=False):
     __print_message(message=message,
                     code_type=DebugCodes.Debug._value,
+                    isp1= inspect.stack()[1],
                     direct_output=direct_output)
 
 
-def __print_message(message: str, code_type: int, direct_output: bool) -> None:
+def __print_message(message: str, code_type: int, isp1: inspect.FrameInfo, direct_output: bool) -> None:
     if _DEBUG < code_type:
         return
 
@@ -100,7 +104,6 @@ def __print_message(message: str, code_type: int, direct_output: bool) -> None:
         print(message, flush=True)
         return
 
-    isp1 = inspect.stack()[1]
     module_name = str(inspect.getmodule(isp1[0])).split("from '", 1)[1].split("'>", 1)[0]
     method_name = isp1[3]
     datetime_str = str(datetime.now()).split(".")[0]
@@ -154,5 +157,3 @@ if __name__ == '__main__':
         print_debug()
 
     test()
-
-    __print_message("this is UNDEFINED", -1, False)
