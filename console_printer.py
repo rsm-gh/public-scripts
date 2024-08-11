@@ -92,7 +92,7 @@ def print_info(message: str, direct_output=False):
 def print_debug(message: str = "", direct_output=False):
     __print_message(message=message,
                     code_type=DebugCodes.Debug._value,
-                    isp1= inspect.stack()[1],
+                    isp1=inspect.stack()[1],
                     direct_output=direct_output)
 
 
@@ -118,17 +118,13 @@ def __print_message(message: str, code_type: int, isp1: inspect.FrameInfo, direc
             code_str = DebugCodes.Warning._text
             code_col = DebugCodes.Warning._color
 
-        case DebugCodes.Debug._value:
-            code_str = DebugCodes.Debug._text
-            code_col = DebugCodes.Debug._color
-
-        case DebugCodes.Warning._value:
-            code_str = DebugCodes.Warning._text
-            code_col = DebugCodes.Warning._color
-
         case DebugCodes.Info._value:
             code_str = DebugCodes.Info._text
             code_col = DebugCodes.Info._color
+
+        case DebugCodes.Debug._value:
+            code_str = DebugCodes.Debug._text
+            code_col = DebugCodes.Debug._color
 
         case _:
             code_str = "UNDEFINED"
