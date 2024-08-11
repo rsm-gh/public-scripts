@@ -63,7 +63,7 @@ if 'PRINT' in os.environ:
         case DebugCodes.Debug._text:
             _DEBUG = DebugCodes.Debug._value
         case _:
-            _DEBUG = DebugCodes.Error._value
+            _DEBUG = DebugCodes.Warning._value
 else:
     _DEBUG = DebugCodes.Warning._value
 
